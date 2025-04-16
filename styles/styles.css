@@ -5,5 +5,5 @@
 }
 
 body {
-  background: url(../img/background.jpg);
+  background: url(../img/background.jpg) center / cover no-repeat;
 }
