@@ -12,14 +12,14 @@ console.log(progressNumbers);
 console.log(taskList);
 
 const updateProgress = () => {
-    const totaltask = taskList.chilfren.length;
-    const completedTask = taskList.querySelectorAll(".checkbox:checked").length;
+  const totaltask = taskList.chilfren.length;
+  const completedTask = taskList.querySelectorAll(".checkbox:checked").length;
 
-    progress.style.width = totaltask 
-    ? `${(completedTask / totaltask) = 100}%`
+  progress.style.width = totaltask
+    ? `${(completedTask / totaltask) * 100}%`
     : "0%";
 
-     progressNumbers.textContent = `${completedTask} / ${totaltask}`;
+  progressNumbers.textContent = `${completedTask} / ${totaltask}`;
 };
 
 const addTask = (event, completed = false) => {
@@ -70,10 +70,12 @@ const addTask = (event, completed = false) => {
   editBtn.addEventListener("click", () => {
     taskInput.value = li.querySelector("span").textContent;
     li.remove();
+    updateProgress();
   });
 
   li.querySelector(".delete_btn").addEventListener("click", () => {
     li.remove();
+    updateProgress();
   });
 
   taskList.appendChild(li);
