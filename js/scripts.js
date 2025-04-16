@@ -11,6 +11,17 @@ console.log(progress);
 console.log(progressNumbers);
 console.log(taskList);
 
+const updateProgress = () => {
+    const totaltask = taskList.chilfren.length;
+    const completedTask = taskList.querySelectorAll(".checkbox:checked").length;
+
+    progress.style.width = totaltask 
+    ? `${(completedTask / totaltask) = 100}%`
+    : "0%";
+
+     progressNumbers.textContent = `${completedTask} / ${totaltask}`;
+};
+
 const addTask = (event, completed = false) => {
   event.preventDefault();
 
@@ -44,6 +55,7 @@ const addTask = (event, completed = false) => {
     editBtn.disabled = true;
     editBtn.style.opacity = "0.5";
     editBtn.style.pointerEvents = "none";
+    updateProgress();
   }
 
   checkbox.addEventListener("change", () => {
@@ -52,6 +64,7 @@ const addTask = (event, completed = false) => {
     editBtn.disabled = isChecked;
     editBtn.style.opacity = isChecked ? "0.5" : "1";
     editBtn.style.pointerEvents = isChecked ? "none" : "auto";
+    updateProgress();
   });
 
   editBtn.addEventListener("click", () => {
