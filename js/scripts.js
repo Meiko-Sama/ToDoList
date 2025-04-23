@@ -12,7 +12,7 @@ console.log(progressNumbers);
 console.log(taskList);
 
 const updateProgress = () => {
-  const totaltask = taskList.chilfren.length;
+  const totaltask = taskList.children.length;
   const completedTask = taskList.querySelectorAll(".checkbox:checked").length;
 
   progress.style.width = totaltask
@@ -22,7 +22,7 @@ const updateProgress = () => {
   progressNumbers.textContent = `${completedTask} / ${totaltask}`;
 };
 
-const addTask = (event, completed = false) => {
+const addTask = (event, completed = false, checkCompletion = true) => {
   event.preventDefault();
 
   //TRIM - Remove os espaços na parte de trás e da frente da STRING
@@ -65,22 +65,27 @@ const addTask = (event, completed = false) => {
     editBtn.style.opacity = isChecked ? "0.5" : "1";
     editBtn.style.pointerEvents = isChecked ? "none" : "auto";
     updateProgress();
+    saveTaskLocalStorage();
   });
 
   editBtn.addEventListener("click", () => {
     taskInput.value = li.querySelector("span").textContent;
     li.remove();
     updateProgress();
+    saveTaskLocalStorage();
   });
 
   li.querySelector(".delete_btn").addEventListener("click", () => {
     li.remove();
     updateProgress();
+    saveTaskLocalStorage();
   });
 
   taskList.appendChild(li);
   taskInput.value = "";
   taskInput.focus();
+  updateProgress(checkCompletion);
+  saveTaskLocalStorage();
 };
 
 addTaskBtn.addEventListener("click", addTask);
@@ -89,3 +94,25 @@ taskInput.addEventListener("keypress", (event) => {
     addTask(event);
   }
 });
+
+const saveTaskLocalStorage = () => {
+  const savedTasks = Array.from(taskList.querySelectorAll("li")).map((li) => ({
+    text: li.querySelector("span").textContent,
+    completed: li.querySelector(".checkbox").checked,
+  }));
+
+  localStorage.setItem("tasks", JSON.stringify(savedTasks));
+};
+
+const loadTaskFromLocalStorage = () => {
+  const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  savedTasks.forEach(({ text, completed }) => {
+    const fakeEvent = { preventDefault: () => {} };
+    taskInput.value = text;
+    addTask(fakeEvent, completed, false);
+  });
+
+  updateProgress();
+};
+
+loadTaskFromLocalStorage();
